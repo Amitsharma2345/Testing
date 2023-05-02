@@ -27,6 +27,7 @@ class UserController extends Controller
                 'errors' => $validator->messages()
             ]);
         } else {
+            if(!$request->id){
             $address = new Address;
             $address->user_id = $request->id;
             $address->address_line_1 = $request->address_line_1;
@@ -34,6 +35,15 @@ class UserController extends Controller
             $address->country = $request->country;
             $address->save();
             $json  = json_encode($address);
+        }else{
+           $address= Address::where('id',$request->id)->first();
+           $address->address_line_1 = $request->address_line_1;
+           $address->address_line_2 = $request->address_line_2;
+           $address->country = $request->country;
+           $address->save();
+           $json  = json_encode($address);
+
+        }
             return $json;
         }
     }
@@ -50,5 +60,13 @@ class UserController extends Controller
     public function get_country(){
         $countries =Country::pluck('name')->all();
         return $countries;
+    }
+    public function edit($id){
+        $data =Address::where('id',$id)->get();
+        json_encode($data);
+        return $data;
+    }
+    public function update(Request $request){
+       dd($request->all());
     }
 }

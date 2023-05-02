@@ -106,7 +106,37 @@
         </div>
     </div>
     </div>
+    <div class="modal" tabindex="-1" id="editing_modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="updating">
+                        <input type="hidden" name="id" id="address_id">
+                        <label>Addres Line 1</label>
+                        <input type="text" name="address_line_1" id="address_1" class="form-control"
+                            placeholder="Enter Adrress Line 1">
+                        <br>
+                        <label>Address line 2</label>
+                        <input type="text" name="address_line_2" id="address_2" class="form-control"
+                            placeholder="Enter Address line 2">
+                        <br>
+                        <label for="country">Choose a Country:</label>
+                        <select name="country" id="countrys">
+                        </select>
 
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button class="addresses btn btn-success">Add Address</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     <script>
         var Accountant = function() {
             var initAccountantValidation = function() {
@@ -173,6 +203,8 @@
                         row += '<td width="20">' + ress.country + '</td>';
                         row += `<td width="20"><button value="` + ress.id +
                             `"  class="btn btn-danger" id="delete_address">Delete</a></td>`;
+                        row += `<td width="20"><button value="` + ress.id +
+                            `"  class="btn btn-danger" id="edit_address">Edit</a></td>`;
 
                         $("#address_list").prepend(row);
                     });
@@ -216,6 +248,8 @@
                             row += '<td>' + res.country + '</td>';
                             row += `<td><button value="` + res.id +
                                 `"  class="btn btn-danger" id="delete_address">Delete</a></td>`;
+                            row += `<td><button value="` + res.id +
+                                `"  class="btn btn-danger" id="delete_address">Edit</a></td>`;
 
                             $("#address_list").prepend(row);
 
@@ -247,6 +281,59 @@
 
             }
         });
+        $("body").on('click', '#edit_address', function() {
+            $("#editing_modal").modal('show');
+            $.ajax({
+                type: "GET",
+                url: "country",
+                dataType: "json",
+                success: function(res) {
+                    $.each(res, function(index, value) {
+                        $('#countrys').append($('<option>', {
+                            value: value,
+                            text: value
+                        }));
+                    });
+                }
+            });
+            var id = $(this).val();
+            $.get('address/' + id + '/edit', function(res) {
+                // console.log(res);
+                    $("#address_id").val(res[0].id);
+                    $("#address_2").val(res[0].address_line_2);
+                    $("#address_1").val(res[0].address_line_1);
+                    // Select the <select> element by its ID
+                var select = $('#countrys');
+
+                // Add a new option to the select element
+                select.append($('<option>', {
+                value: res[0].country,
+                text:res[0].country,
+                }));
+            });
+        });
+        $("#updating").submit(function(e) {
+            var forms = $(this);
+            e.preventDefault();
+            $.ajaxSetup({
+                headers: {
+                    'x-csrf-token': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+        $.ajax({
+        url: 'address/store',
+        type: 'POST',
+        data: forms.serialize(),
+        success: function(response,status,code ) {
+            console.log(code.status)
+            if (code.status == 200) {
+                location.reload();
+            } else {
+            }
+         },
+    });
+    });
+
     </script>
 
 </body>

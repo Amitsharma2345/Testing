@@ -14,8 +14,9 @@ use App\Http\Controllers\UserController;
 */
 
 Route::get('/',[UserController::class,'index']);
-Route::get('/show/{id}',[UserController::class,'show']);
-Route::get('/country',[UserController::class,'get_country']);
-Route::delete('/delete/{id}',[UserController::class,'destroy']);
-Route::post('/address/store',[UserController::class,'store']);
+Route::get('address/{id}/edit',[UserController::class,'edit']);
+Route::get('show/{id}',[UserController::class,'show']);
+Route::get('country',[UserController::class,'get_country']);
+Route::delete('delete/{id}',[UserController::class,'destroy']);
+Route::post('address/store',[UserController::class,'store']);
 
