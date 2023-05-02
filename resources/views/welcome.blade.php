@@ -75,6 +75,7 @@
                     <!-- Modal body -->
                     <div class="modal-body">
                         <input type="hidden" name="id" id="id">
+                        <input type="hidden" name="user_id" id="user">
                         <label>Addres Line 1</label>
                         <input type="text" name="address_line_1" id="address_line_1" class="form-control"
                             placeholder="Enter Adrress Line 1">

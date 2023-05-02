@@ -17,6 +17,7 @@ class UserController extends Controller
     }
     public function store(Request $request)
     {
+        // dd($request->all());
         $validator = Validator::make($request->all(), [
             'address_line_1' => 'required',
             'address_line_2' => 'required',
@@ -27,7 +28,7 @@ class UserController extends Controller
                 'errors' => $validator->messages()
             ]);
         } else {
-            if(!$request->id){
+            if(isset($request->user_id)){
             $address = new Address;
             $address->user_id = $request->id;
             $address->address_line_1 = $request->address_line_1;
